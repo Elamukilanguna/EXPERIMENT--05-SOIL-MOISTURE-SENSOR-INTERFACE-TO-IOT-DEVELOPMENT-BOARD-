@@ -97,10 +97,50 @@ GND is the ground pin.
 
 
 ## STM 32 CUBE PROGRAM :
+```
+#include "main.h"
+#include "stdio.h"
+
+#if defined (_ICCARM) || defined (_ARMCC_VERSION)
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#elif defined(_GNUC_)
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#endif
+
+PUTCHAR_PROTOTYPE
+{
+  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 0xFFFF);
+  return ch;
+}
+
+while (1)
+  {
+	  HAL_ADC_Start(&hadc);
+	  		HAL_ADC_PollForConversion(&hadc,100);
+	  		adc_val = HAL_ADC_GetValue(&hadc);
+	  		uint32_t soilmoisture;
+	  		soilmoisture=adc_val/10.24;
+	  		HAL_ADC_Stop(&hadc);
+	  		HAL_Delay(500);
+	  		printf("soilmoisture=:%ld\n",soilmoisture);
+	  		if(adc_val<500)
+	  		{
+	  			 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);;
+	  		}
+	  		if(adc_val>500)
+	  		{
+	  			 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);;
+	  		}
+  }
+}
+```
 
 
 
 ## Output screen shots on serial monitor   :
+![326017419-e97b4790-accd-4179-95c1-b357a82a4c72](https://github.com/Elamukilanguna/EXPERIMENT--05-SOIL-MOISTURE-SENSOR-INTERFACE-TO-IOT-DEVELOPMENT-BOARD-/assets/144870462/a46308a1-fc5c-4c74-9136-25408df47bba)
+![326017472-ce08beb6-765c-482d-9367-1f0b7c10cd2d](https://github.com/Elamukilanguna/EXPERIMENT--05-SOIL-MOISTURE-SENSOR-INTERFACE-TO-IOT-DEVELOPMENT-BOARD-/assets/144870462/fcd4ce01-ef13-4b6d-a731-d1ea66dfdf60)
+
  
  
  
